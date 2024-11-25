@@ -1,0 +1,66 @@
+#==============================================================================
+# Requirements
+# * Docker installed
+# * docker-compose installed
+#----------------------------------------------------------------------
+# Use
+# UID=${UID} GID=${GID} docker-compose -f docker-compose-dev.yml up -d
+#----------------------------------------------------------------------
+version: '3.8'
+#----------------------------------------------------------------------
+# Networks
+#----------------------------------------------------------------------
+networks:
+  tech-challenge-orders-net-test:
+    driver: bridge
+#----------------------------------------------------------------------
+# Volumes
+#----------------------------------------------------------------------
+volumes:
+  tech-challenge-orders-db-data-test: {}
+#----------------------------------------------------------------------
+# Services:
+#----------------------------------------------------------------------
+services:
+  tech-challenge-orders-test:
+    image: node:16-bullseye
+    container_name: tech-challenge-orders-test
+    working_dir: /usr/src/app
+    command: /usr/src/app/docker/docker-run-test.sh
+    user: '${DUID}:${DGID}'
+    volumes:
+      - '..:/usr/src/app:Z'
+    ports:
+      - '3000:3000'
+    networks:
+      - tech-challenge-orders-net-test
+    env_file:
+      - ./test-local.env
+    depends_on:
+      - tech-challenge-orders-db-test
+  tech-challenge-db-test:
+    image: postgres:latest
+    container_name: tech-challenge-orders-db-test
+    ports:
+      - 5433:5432
+    networks:
+      - tech-challenge-orders-net-test
+    env_file:
+      - ./test-local.env
+    volumes:
+      - tech-challenge-orders-db-data-test:/var/lib/postgresql/data
+  localstack:
+    image: 'localstack/localstack:latest'
+    container_name: localstack
+    ports:
+      - '4566:4566'
+    volumes:
+      - '${LOCALSTACK_VOLUME_DIR:-/var/lib/localstack}:/var/lib/localstack'
+      - '/var/run/docker.sock:/var/run/docker.sock'
+      - ./localstack/aws:/etc/localstack/init/ready.d
+    environment:
+      - AWS_DEFAULT_REGION=us-east-1
+      - EDGE_PORT=4566
+      - SERVICES=sqs,dynamodb
+    networks:
+      - tech-challenge-orders-net

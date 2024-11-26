@@ -1,0 +1,4 @@
+export enum MessageType {
+  MSG_PAYMENT_SUCCESS = 'MSG_PAYMENT_SUCCESS',
+  MSG_PAYMENT_FAIL = 'MSG_PAYMENT_FAIL',
+}

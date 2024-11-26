@@ -11,7 +11,6 @@ import { Order } from '../entities/order.entity';
 import { IDatabase } from '../interfaces/database.interface';
 import { v4 as uuidv4 } from 'uuid';
 import { DatabaseError } from 'src/errors/database.error';
-import { OrderStatus } from 'src/enum/order-status.enum';
 import { Product } from 'src/entities/product.entity';
 
 export class DynamoDatabase implements IDatabase {
@@ -71,7 +70,7 @@ export class DynamoDatabase implements IDatabase {
                   product.price,
                   product.description,
                   product.pictures,
-                  product.categoryId,
+                  product.categoryType,
                   product.quantity,
                 ),
             ),
@@ -80,7 +79,6 @@ export class DynamoDatabase implements IDatabase {
 
       return orders;
     } catch (error) {
-      console.log(error);
       throw new DatabaseError('Failed to find all orders');
     }
   }
@@ -115,7 +113,7 @@ export class DynamoDatabase implements IDatabase {
               product.price,
               product.description,
               product.pictures,
-              product.categoryId,
+              product.categoryType,
               product.quantity,
             ),
         ),
@@ -127,7 +125,8 @@ export class DynamoDatabase implements IDatabase {
 
   async createOrder(order: Order): Promise<Order> {
     const orderId = uuidv4();
-    const now = new Date();
+    const productId = uuidv4();
+    const now = new Date().toISOString();
 
     try {
       const params = {
@@ -138,14 +137,19 @@ export class DynamoDatabase implements IDatabase {
           updatedAt: now,
           notes: order.getNotes(),
           trackingId: order.getTrackingId(),
-          totalPrice: order.getTrackingId(),
+          totalPrice: order.getTotalPrice(),
           status: order.getStatus(),
           paymentId: order.getPaymentId(),
           products: order.getProducts().map((product) => ({
-            ...product,
-            id: uuidv4(),
+            id: productId,
             createdAt: now,
             updatedAt: now,
+            name: product.getName(),
+            price: product.getPrice(),
+            description: product.getDescription(),
+            pictures: product.getPictures(),
+            categoryType: product.getCategoryType(),
+            quantity: product.getQuantity(),
           })),
         },
       };
@@ -154,6 +158,7 @@ export class DynamoDatabase implements IDatabase {
 
       return this.findOrderById(orderId);
     } catch (error) {
+      console.error(error);
       throw new DatabaseError('Failed to create an order');
     }
   }

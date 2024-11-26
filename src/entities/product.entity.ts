@@ -1,3 +1,5 @@
+import { InvalidCategoryError } from '../errors/invalid-category.error';
+import { CategoryType } from '../enum/category-type.enum';
 import { InvalidProductError } from '../errors/invalid-product.error';
 
 export class Product {
@@ -8,7 +10,7 @@ export class Product {
   private price: number;
   private description: string;
   private pictures: string[];
-  private categoryId: number;
+  private categoryType: CategoryType;
   private quantity: number;
 
   constructor(
@@ -19,7 +21,7 @@ export class Product {
     price: number,
     description: string,
     pictures: string[],
-    categoryId: number,
+    categoryType: string,
     quantity: number,
   ) {
     this.setId(id);
@@ -29,7 +31,7 @@ export class Product {
     this.setPrice(price);
     this.setDescription(description);
     this.setPictures(pictures);
-    this.setCategoryId(categoryId);
+    this.setCategoryType(categoryType);
     this.setQuantity(quantity);
   }
 
@@ -38,7 +40,7 @@ export class Product {
     price: number,
     description: string,
     pictures: string[],
-    categoryId: number,
+    categoryType: CategoryType,
     quantity: number,
   ): Product {
     const now = new Date();
@@ -50,7 +52,7 @@ export class Product {
       price,
       description,
       pictures,
-      categoryId,
+      categoryType,
       quantity,
     );
   }
@@ -84,8 +86,8 @@ export class Product {
     return this.pictures;
   }
 
-  public getCategoryId(): number {
-    return this.categoryId;
+  public getCategoryType(): string {
+    return this.categoryType;
   }
 
   public getQuantity(): number {
@@ -133,8 +135,13 @@ export class Product {
     this.pictures = pictures;
   }
 
-  public setCategoryId(categoryId: number): void {
-    this.categoryId = categoryId;
+  public setCategoryType(categoryType: string): void {
+    this.categoryType = CategoryType[categoryType];
+
+    if (!categoryType)
+      throw new InvalidCategoryError(
+        'Type must be MEAL, DRINK, SIDE or DESSERT',
+      );
   }
 
   public setQuantity(quantity: number): void {

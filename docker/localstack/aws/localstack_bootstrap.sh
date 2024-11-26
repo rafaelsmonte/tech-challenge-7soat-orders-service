@@ -14,7 +14,7 @@ echo "==================="
 # https://docs.aws.amazon.com/cli/latest/reference/sqs/create-queue.html
 create_queue() {
   local QUEUE_NAME_TO_CREATE=$1
-  awslocal sqs create-queue --endpoint-url http://localhost:4566 --queue-name --region ${AWS_REGION} ${QUEUE_NAME_TO_CREATE} --attributes "FifoQueue=true,ContentBasedDeduplication=true"
+  awslocal sqs create-queue --endpoint-url http://localhost:4566 --queue-name --region ${AWS_REGION} ${QUEUE_NAME_TO_CREATE} --attributes "FifoQueue=true,ContentBasedDeduplication=true" 
 }
  
 create_queue "orders-queue.fifo"

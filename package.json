@@ -8,15 +8,19 @@
     "copy-build-deps": "copyfiles -u 2 src/api/swagger.json dist/src/api",
     "swagger": "node ./src/api/swagger.ts",
     "start:dev": "ts-node-dev -r tsconfig-paths/register src/index.ts",
-    "start:prod": "node dist/index.js"
+    "start:prod": "node dist/index.js",
+    "test": "jest"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/jest": "^29.5.14",
     "@types/node": "^20.2.5",
     "@types/sqlite3": "^3.1.8",
     "@types/uuid": "^10.0.0",
+    "jest": "^29.7.0",
     "rimraf": "^5.0.1",
+    "ts-jest": "^29.2.5",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.1.3"

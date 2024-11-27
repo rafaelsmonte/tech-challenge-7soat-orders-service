@@ -1,4 +1,4 @@
-import { ProductWithQuantity } from 'src/types/product-with-quantity.type';
+import { ProductWithQuantity } from '../types/product-with-quantity.type';
 import { Product } from '../entities/product.entity';
 import { IProductGateway } from '../interfaces/product.gateway.interface';
 import { IClientHttp } from '../interfaces/client-http.interface';

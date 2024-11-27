@@ -5,7 +5,7 @@ import { OrderUseCases } from '../usecases/order.usecases';
 import { OrderAdapter } from '../adapters/order.adapter';
 import { ProductGateway } from '../gateways/product.gateway';
 import { IClientHttp } from '../interfaces/client-http.interface';
-import { PaymentGateway } from 'src/gateways/payment-gateway';
+import { PaymentGateway } from '../gateways/payment-gateway';
 
 export class OrderController {
   static async findAll(database: IDatabase): Promise<string> {

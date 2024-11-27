@@ -1,8 +1,10 @@
 import axios, { AxiosInstance } from 'axios';
-import { Payment } from 'src/entities/payment.entity';
-import { Product } from 'src/entities/product.entity';
-import { IClientHttp } from 'src/interfaces/client-http.interface';
-import { ProductWithQuantity } from 'src/types/product-with-quantity.type';
+import { Payment } from '../entities/payment.entity';
+import { Product } from '../entities/product.entity';
+import { CreatePaymentError } from '../errors/create-payment-error';
+import { IClientHttp } from '../interfaces/client-http.interface';
+import { ProductWithQuantity } from '../types/product-with-quantity.type';
+import { ReserveProductsError } from '../errors/reserve-products-error';
 
 export class AxiosClientHttp implements IClientHttp {
   private axiosClient: AxiosInstance;
@@ -16,44 +18,72 @@ export class AxiosClientHttp implements IClientHttp {
 
   async createPayment(orderId: string, price: number): Promise<Payment> {
     const data = { orderId, price };
-    const response = await this.axiosClient.post('/payment', data, {
-      baseURL: process.env.PAYMENTS_API_BASE_URL,
-    });
 
-    const payment = new Payment(
-      response.data.id,
-      response.data.orderId,
-      response.data.price,
-      response.data.pixQrCode,
-      response.data.pixQrCode64,
-    );
+    try {
+      const response = await this.axiosClient.post('/private/payment', data, {
+        baseURL: process.env.PAYMENTS_API_BASE_URL,
+        headers: {
+          'x-api-key': process.env.PAYMENTS_API_KEY,
+        },
+      });
 
-    return payment;
+      const payment = new Payment(
+        response.data.id,
+        response.data.orderId,
+        response.data.price,
+        response.data.pixQrCode,
+        response.data.pixQrCode64,
+      );
+
+      return payment;
+    } catch (error) {
+      console.log(`An error has occurred while creating payment: ${error}`);
+      throw new CreatePaymentError(
+        error.response.data.message ||
+          'An error has occurred while creating payment',
+      );
+    }
   }
 
   async reserveProducts(
     productsWithQuantity: ProductWithQuantity[],
   ): Promise<Product[]> {
     const data = { productsWithQuantity };
-    const response = await this.axiosClient.post('/stock/reserve', data, {
-      baseURL: process.env.PRODUCTS_API_BASE_URL,
-    });
 
-    const products = response.data.map(
-      (product) =>
-        new Product(
-          product.id,
-          product.createdAt,
-          product.updatedAt,
-          product.name,
-          product.price,
-          product.description,
-          product.pictures,
-          product.categoryType,
-          product.quantity,
-        ),
-    );
+    try {
+      const response = await this.axiosClient.post(
+        '/private/stock/reserve',
+        data,
+        {
+          baseURL: process.env.PRODUCTS_CATALOG_API_BASE_URL,
+          headers: {
+            'x-api-key': process.env.PRODUCTS_CATALOG_API_KEY,
+          },
+        },
+      );
 
-    return products;
+      const products = response.data.map(
+        (product) =>
+          new Product(
+            product.id,
+            product.createdAt,
+            product.updatedAt,
+            product.name,
+            product.price,
+            product.description,
+            product.pictures,
+            product.categoryType,
+            product.quantity,
+          ),
+      );
+
+      return products;
+    } catch (error) {
+      console.log(`An error has occurred while reserving products: ${error}`);
+      throw new ReserveProductsError(
+        error.response.data.message ||
+          'An error has occurred while reserving products',
+      );
+    }
   }
 }

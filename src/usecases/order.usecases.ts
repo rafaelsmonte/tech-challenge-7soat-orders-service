@@ -3,13 +3,13 @@ import { OrderStatus } from '../enum/order-status.enum';
 import { OrderNotFoundError } from '../errors/order-not-found.error';
 import { IOrderGateway } from '../interfaces/order.gateway.interface';
 import { ProductWithQuantity } from '../types/product-with-quantity.type';
-import { InvalidPaymentOrderStatusError } from 'src/errors/invalid-payment-status.error';
-import { IProductGateway } from 'src/interfaces/product.gateway.interface';
-import { IPaymentGateway } from 'src/interfaces/payment.gateway.interface';
-import { Product } from 'src/entities/product.entity';
-import { OrderWithPayment } from 'src/types/order-with-payment.type';
-import { CategoryType } from 'src/enum/category-type.enum';
-import { Payment } from 'src/entities/payment.entity';
+import { InvalidPaymentOrderStatusError } from '../errors/invalid-payment-status.error';
+import { IProductGateway } from '../interfaces/product.gateway.interface';
+import { IPaymentGateway } from '../interfaces/payment.gateway.interface';
+import { Product } from '../entities/product.entity';
+import { OrderWithPayment } from '../types/order-with-payment.type';
+import { CategoryType } from '../enum/category-type.enum';
+import { Payment } from '../entities/payment.entity';
 
 export class OrderUseCases {
   static async findAll(orderGateway: IOrderGateway): Promise<Order[]> {
@@ -91,7 +91,14 @@ export class OrderUseCases {
       ),
     );
 
-    const payment = await paymentGateway.create(newOrder.getId(), totalPrice);
+    let payment: Payment;
+
+    try {
+      payment = await paymentGateway.create(newOrder.getId(), totalPrice);
+    } catch (error) {
+      await orderGateway.delete(newOrder.getId());
+      throw error;
+    }
 
     // TODO uncomment for tests. remove this late
     // const payment = new Payment(

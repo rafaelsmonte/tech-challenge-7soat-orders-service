@@ -10,8 +10,8 @@ import {
 import { Order } from '../entities/order.entity';
 import { IDatabase } from '../interfaces/database.interface';
 import { v4 as uuidv4 } from 'uuid';
-import { DatabaseError } from 'src/errors/database.error';
-import { Product } from 'src/entities/product.entity';
+import { DatabaseError } from '../errors/database.error';
+import { Product } from '../entities/product.entity';
 
 export class DynamoDatabase implements IDatabase {
   private dynamoDBDocClient: DynamoDBDocumentClient;
@@ -79,6 +79,7 @@ export class DynamoDatabase implements IDatabase {
 
       return orders;
     } catch (error) {
+      console.log(`Database error: ${error}`);
       throw new DatabaseError('Failed to find all orders');
     }
   }
@@ -119,6 +120,7 @@ export class DynamoDatabase implements IDatabase {
         ),
       );
     } catch (error) {
+      console.log(`Database error: ${error}`);
       throw new DatabaseError('Failed to find an order');
     }
   }
@@ -158,7 +160,7 @@ export class DynamoDatabase implements IDatabase {
 
       return this.findOrderById(orderId);
     } catch (error) {
-      console.error(error);
+      console.log(`Database error: ${error}`);
       throw new DatabaseError('Failed to create an order');
     }
   }
@@ -185,6 +187,7 @@ export class DynamoDatabase implements IDatabase {
 
       return this.findOrderById(order.getId());
     } catch (error) {
+      console.log(`Database error: ${error}`);
       throw new DatabaseError('Failed to delete order status');
     }
   }
@@ -213,6 +216,7 @@ export class DynamoDatabase implements IDatabase {
 
       return this.findOrderById(orderId);
     } catch (error) {
+      console.log(`Database error: ${error}`);
       throw new DatabaseError('Failed to update an order paymentId');
     }
   }
@@ -228,6 +232,7 @@ export class DynamoDatabase implements IDatabase {
 
       await this.dynamoDBDocClient.send(new DeleteCommand(params));
     } catch (error) {
+      console.log(`Database error: ${error}`);
       throw new DatabaseError('Failed to delete an order');
     }
   }

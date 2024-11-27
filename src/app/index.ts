@@ -13,10 +13,12 @@ import { IDatabase } from '../interfaces/database.interface';
 import { cognitoAuthMiddleware } from './cognito-auth.middleware';
 import { IClientHttp } from '../interfaces/client-http.interface';
 import { SQS } from 'aws-sdk';
-import { PaymentMessage } from 'src/types/payment-message.type';
-import { MessageType } from 'src/enum/message-type.enum';
-import { MessageSender } from 'src/enum/message-sender.enum';
-import { MessageTarget } from 'src/enum/message-target.enum';
+import { PaymentMessage } from '../types/payment-message.type';
+import { MessageType } from '../enum/message-type.enum';
+import { MessageSender } from '../enum/message-sender.enum';
+import { MessageTarget } from '../enum/message-target.enum';
+import { CreatePaymentError } from '../errors/create-payment-error';
+import { ReserveProductsError } from '../errors/reserve-products-error';
 
 export class OrdersApp {
   constructor(private database: IDatabase, private clientHttp: IClientHttp) {}
@@ -53,6 +55,8 @@ export class OrdersApp {
         if (receivedMessages.Messages) {
           for (const rawMessage of receivedMessages.Messages) {
             try {
+              console.log(`Message received: ${rawMessage}`);
+
               const message = JSON.parse(rawMessage.Body) as PaymentMessage;
 
               if (
@@ -62,13 +66,13 @@ export class OrdersApp {
                 if (message.type == MessageType.MSG_PAYMENT_SUCCESS) {
                   await OrderController.updateStatusOnPaymentReceived(
                     this.database,
-                    message.payload['orderId'],
+                    message.payload.orderId,
                     true,
                   );
                 } else if (message.type == MessageType.MSG_PAYMENT_FAIL) {
                   await OrderController.updateStatusOnPaymentReceived(
                     this.database,
-                    message.payload['orderId'],
+                    message.payload.orderId,
                     false,
                   );
                 } else {
@@ -220,6 +224,10 @@ export class OrdersApp {
       response.status(404).json({ message: error.message });
     } else if (error instanceof CategoryNotFoundError) {
       response.status(404).json({ message: error.message });
+    } else if (error instanceof CreatePaymentError) {
+      response.status(409).json({ message: error.message });
+    } else if (error instanceof ReserveProductsError) {
+      response.status(409).json({ message: error.message });
     } else if (error instanceof DatabaseError) {
       response.status(500).json({ message: error.message });
     } else {

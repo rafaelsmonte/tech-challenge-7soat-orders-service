@@ -1,6 +1,6 @@
-import { Payment } from 'src/entities/payment.entity';
-import { ProductWithQuantity } from 'src/types/product-with-quantity.type';
-import { Product } from 'src/entities/product.entity';
+import { Payment } from '../entities/payment.entity';
+import { ProductWithQuantity } from '../types/product-with-quantity.type';
+import { Product } from '../entities/product.entity';
 
 export interface IClientHttp {
   // Payment

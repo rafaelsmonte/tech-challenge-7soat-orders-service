@@ -1,6 +1,6 @@
 import { ProductGateway } from './product.gateway';
 import { IClientHttp } from '../interfaces/client-http.interface';
-import { ProductWithQuantity } from 'src/types/product-with-quantity.type';
+import { ProductWithQuantity } from '../types/product-with-quantity.type';
 import { Product } from '../entities/product.entity';
 
 describe('ProductGateway', () => {
@@ -36,7 +36,9 @@ describe('ProductGateway', () => {
     const result = await productGateway.reserve(productsWithQuantity);
 
     // Assert
-    expect(clientHttpMock.reserveProducts).toHaveBeenCalledWith(productsWithQuantity);
+    expect(clientHttpMock.reserveProducts).toHaveBeenCalledWith(
+      productsWithQuantity,
+    );
     expect(result).toEqual(expectedProducts);
   });
 
@@ -51,7 +53,11 @@ describe('ProductGateway', () => {
     clientHttpMock.reserveProducts.mockRejectedValue(new Error(errorMessage));
 
     // Act & Assert
-    await expect(productGateway.reserve(productsWithQuantity)).rejects.toThrow(errorMessage);
-    expect(clientHttpMock.reserveProducts).toHaveBeenCalledWith(productsWithQuantity);
+    await expect(productGateway.reserve(productsWithQuantity)).rejects.toThrow(
+      errorMessage,
+    );
+    expect(clientHttpMock.reserveProducts).toHaveBeenCalledWith(
+      productsWithQuantity,
+    );
   });
 });

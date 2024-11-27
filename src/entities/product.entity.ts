@@ -138,7 +138,7 @@ export class Product {
   public setCategoryType(categoryType: string): void {
     this.categoryType = CategoryType[categoryType];
 
-    if (!categoryType)
+    if (!this.categoryType)
       throw new InvalidCategoryError(
         'Type must be MEAL, DRINK, SIDE or DESSERT',
       );

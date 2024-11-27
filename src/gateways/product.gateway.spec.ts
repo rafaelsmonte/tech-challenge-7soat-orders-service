@@ -1,51 +1,51 @@
-import { ProductGateway } from './product.gateway';
+import { PaymentGateway } from './payment-gateway';
 import { IClientHttp } from '../interfaces/client-http.interface';
-import { ProductWithQuantity } from 'src/types/product-with-quantity.type';
-import { Product } from '../entities/product.entity';
+import { Payment } from '../entities/payment.entity';
 
-describe('ProductGateway', () => {
-  let productGateway: ProductGateway;
-  let clientHttpMock: jest.Mocked<IClientHttp>;
+// Mocking IClientHttp
+jest.mock('../interfaces/client-http.interface');
+
+describe('PaymentGateway', () => {
+  let clientHttp: IClientHttp;
+  let paymentGateway: PaymentGateway;
 
   beforeEach(() => {
-    clientHttpMock = {
-      reserveProducts: jest.fn(),
-    } as unknown as jest.Mocked<IClientHttp>;
+    // Mocking the createPayment method of IClientHttp
+    clientHttp = {
+      createPayment: jest.fn(),
+    } as unknown as IClientHttp;
 
-    productGateway = new ProductGateway(clientHttpMock);
+    paymentGateway = new PaymentGateway(clientHttp);
   });
 
-  it('should call clientHttp.reserveProducts with correct arguments', async () => {
-    // Arrange
-    const productsWithQuantity: ProductWithQuantity[] = [
-      { productId: 123, quantity: 2 },
-      { productId: 456, quantity: 1 },
-    ];
-    const expectedProducts: Product[] = [
-        new Product(1, new Date(), new Date(), 'prod1', 1000, '', [], 1, 2),
-        new Product(2, new Date(), new Date(), 'prod2', 10, '', [], 1, 2),
-    ]
-      
-    clientHttpMock.reserveProducts.mockResolvedValue(expectedProducts);
+  describe('create', () => {
+    it('should call createPayment and return a payment object', async () => {
+      const orderId = '123';
+      const price = 100;
+      const mockPayment = new Payment(1, orderId, price, 'qr', 'qr64');
 
-    // Act
-    const result = await productGateway.reserve(productsWithQuantity);
+      // Mocking the clientHttp.createPayment method to return the mockPayment
+      (clientHttp.createPayment as jest.Mock).mockResolvedValue(mockPayment);
 
-    // Assert
-    expect(clientHttpMock.reserveProducts).toHaveBeenCalledWith(productsWithQuantity);
-    expect(result).toEqual(expectedProducts);
-  });
+      const result = await paymentGateway.create(orderId, price);
 
-  it('should throw an error if clientHttp.reserveProducts fails', async () => {
-    // Arrange
-    const productsWithQuantity: ProductWithQuantity[] = [
-      { productId: 123, quantity: 2 },
-    ];
-    const errorMessage = 'Failed to reserve products';
-    clientHttpMock.reserveProducts.mockRejectedValue(new Error(errorMessage));
+      // Assert that the result matches the mockPayment
+      expect(result).toEqual(mockPayment);
 
-    // Act & Assert
-    await expect(productGateway.reserve(productsWithQuantity)).rejects.toThrow(errorMessage);
-    expect(clientHttpMock.reserveProducts).toHaveBeenCalledWith(productsWithQuantity);
+      // Assert that createPayment was called once with the correct arguments
+      expect(clientHttp.createPayment).toHaveBeenCalledWith(orderId, price);
+      expect(clientHttp.createPayment).toHaveBeenCalledTimes(1);
+    });
+
+    it('should throw an error if createPayment fails', async () => {
+      const orderId = '123';
+      const price = 100;
+
+      // Mocking the clientHttp.createPayment method to throw an error
+      (clientHttp.createPayment as jest.Mock).mockRejectedValue(new Error('Payment creation failed'));
+
+      // Assert that calling create will throw an error
+      await expect(paymentGateway.create(orderId, price)).rejects.toThrow('Payment creation failed');
+    });
   });
 });

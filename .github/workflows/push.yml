@@ -17,13 +17,13 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'  
+          node-version: '18.6.0'  
       - name: Install dependencies
         run: |
           yarn 
       - name: Run tests with Jest and collect coverage
         run: |
-          yarn test -- --coverage  
+          yarn test
       - name: Upload coverage report
         uses: actions/upload-artifact@v3
         with:
@@ -34,6 +34,8 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        with:
+          args: "-X"
       - name: SonarQube Quality Gate check
         uses: sonarsource/sonarqube-quality-gate-action@master
         timeout-minutes: 5

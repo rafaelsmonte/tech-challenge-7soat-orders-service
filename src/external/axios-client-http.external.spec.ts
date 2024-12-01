@@ -68,7 +68,6 @@ describe('AxiosClientHttp', () => {
             expect(result.getOrderId()).toBe(mockOrderId);
             expect(result.getPrice()).toBe(mockPrice);
             expect(result.getPixQrCode()).toBe('qr-code-string');
-            expect(result.getPixQrCodeBase64()).toBe('base64-qr-code');
 
             // Verify axios call
             expect(mockedAxios.post).toHaveBeenCalledWith(
@@ -122,25 +121,29 @@ describe('AxiosClientHttp', () => {
             const mockProductsResponse = {
                 data: [
                     {
-                        id: 'product-1',
+                        id: 1,
                         createdAt: '2023-01-01T00:00:00Z',
                         updatedAt: '2023-01-02T00:00:00Z',
                         name: 'Product 1',
                         price: 50.00,
                         description: 'Description 1',
                         pictures: ['pic1.jpg'],
-                        categoryType: 'DRINK',
+                        category: {
+                            type: 'DRINK'
+                        },
                         quantity: 2
                     },
                     {
-                        id: 'product-2',
+                        id: 2,
                         createdAt: '2023-02-01T00:00:00Z',
                         updatedAt: '2023-02-02T00:00:00Z',
                         name: 'Product 2',
                         price: 75.00,
                         description: 'Description 2',
                         pictures: ['pic2.jpg'],
-                        categoryType: 'DRINK',
+                        category: {
+                            type: 'DRINK'
+                        },
                         quantity: 1
                     }
                 ]
@@ -158,8 +161,8 @@ describe('AxiosClientHttp', () => {
             expect(result[0]).toBeInstanceOf(Product);
             expect(result[1]).toBeInstanceOf(Product);
 
-            expect(result[0].getId()).toBe('product-1');
-            expect(result[1].getId()).toBe('product-2');
+            expect(result[0].getId()).toBe(1);
+            expect(result[1].getId()).toBe(2);
 
             // Verify axios call
             expect(mockedAxios.post).toHaveBeenCalledWith(

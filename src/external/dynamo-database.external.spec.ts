@@ -112,6 +112,7 @@ describe('DynamoDatabase', () => {
                 getTotalPrice: () => 200,
                 getStatus: () => 'AWAITING',
                 getPaymentId: () => 12345,
+                getCustomerId: () => 1,
                 getProducts: () => [
                     {
                         getName: () => 'Product 1',
@@ -120,6 +121,7 @@ describe('DynamoDatabase', () => {
                         getPictures: () => ['pic1.jpg'],
                         getCategoryType: () => 'DRINK',
                         getQuantity: () => 2,
+                        getId: () => '1234321',
                     },
                 ],
             };

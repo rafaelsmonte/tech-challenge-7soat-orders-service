@@ -18,9 +18,7 @@ describe('AxiosClientHttp', () => {
     let orderGateway: jest.Mocked<IOrderGateway>;
     let productGateway: jest.Mocked<IProductGateway>;
     let paymentGateway: jest.Mocked<IPaymentGateway>;
-
     beforeEach(() => {
-        // Reset mocks before each test
         mockedAxios.create.mockReturnValue(mockedAxios);
         axiosClientHttp = new AxiosClientHttp();
         orderGateway = {
@@ -81,7 +79,6 @@ describe('AxiosClientHttp', () => {
         });
 
         it('should throw CreatePaymentError when payment creation fails', async () => {
-            // Mock API error response
             const mockErrorResponse = {
                 response: {
                     data: {
@@ -91,7 +88,6 @@ describe('AxiosClientHttp', () => {
             };
             mockedAxios.post.mockRejectedValue(mockErrorResponse);
 
-            // Set up environment variables
             process.env.PAYMENTS_API_BASE_URL = 'https://payments-api.test';
             process.env.PAYMENTS_API_KEY = 'test-api-key';
 
@@ -100,6 +96,23 @@ describe('AxiosClientHttp', () => {
 
             await expect(axiosClientHttp.createPayment(mockOrderId, mockPrice))
                 .rejects.toThrow('Payment creation failed');
+        });
+        it('should throw a CreatePaymentError with a generic message if no message is provided', async () => {
+            const orderId = 'order-id';
+            const price = 100;
+
+            mockedAxios.post.mockRejectedValueOnce({
+                response: {
+                    data: {},
+                },
+            });
+
+            try {
+                await axiosClientHttp.createPayment(orderId, price);
+            } catch (error) {
+                expect(error).toBeInstanceOf(CreatePaymentError);
+                expect(error.message).toBe('An error has occurred while creating payment');
+            }
         });
     });
 
@@ -117,7 +130,6 @@ describe('AxiosClientHttp', () => {
         ];
 
         it('should successfully reserve products', async () => {
-            // Mock successful API response
             const mockProductsResponse = {
                 data: [
                     {
@@ -150,13 +162,11 @@ describe('AxiosClientHttp', () => {
             };
             mockedAxios.post.mockResolvedValue(mockProductsResponse);
 
-            // Set up environment variables
             process.env.PRODUCTS_CATALOG_API_BASE_URL = 'https://products-api.test';
             process.env.PRODUCTS_CATALOG_API_KEY = 'test-product-api-key';
 
             const result = await axiosClientHttp.reserveProducts(mockProductsWithQuantity);
 
-            // Assertions
             expect(result).toHaveLength(2);
             expect(result[0]).toBeInstanceOf(Product);
             expect(result[1]).toBeInstanceOf(Product);
@@ -164,7 +174,6 @@ describe('AxiosClientHttp', () => {
             expect(result[0].getId()).toBe(1);
             expect(result[1].getId()).toBe(2);
 
-            // Verify axios call
             expect(mockedAxios.post).toHaveBeenCalledWith(
                 '/private/stock/reserve',
                 { productsWithQuantity: mockProductsWithQuantity },
@@ -176,7 +185,6 @@ describe('AxiosClientHttp', () => {
         });
 
         it('should throw ReserveProductsError when product reservation fails', async () => {
-            // Mock API error response
             const mockErrorResponse = {
                 response: {
                     data: {
@@ -186,7 +194,6 @@ describe('AxiosClientHttp', () => {
             };
             mockedAxios.post.mockRejectedValue(mockErrorResponse);
 
-            // Set up environment variables
             process.env.PRODUCTS_CATALOG_API_BASE_URL = 'https://products-api.test';
             process.env.PRODUCTS_CATALOG_API_KEY = 'test-product-api-key';
 
@@ -195,6 +202,21 @@ describe('AxiosClientHttp', () => {
 
             await expect(axiosClientHttp.reserveProducts(mockProductsWithQuantity))
                 .rejects.toThrow('Product reservation failed');
+        });
+        it('should throw a ReserveProductsError with a generic message if no message is provided', async () => {
+            const mockErrorResponse = {
+                response: {}
+            };
+            mockedAxios.post.mockRejectedValue(mockErrorResponse);
+
+            process.env.PRODUCTS_CATALOG_API_BASE_URL = 'https://products-api.test';
+            process.env.PRODUCTS_CATALOG_API_KEY = 'test-product-api-key';
+
+            await expect(axiosClientHttp.reserveProducts(mockProductsWithQuantity))
+                .rejects.toThrow(ReserveProductsError);
+
+            await expect(axiosClientHttp.reserveProducts(mockProductsWithQuantity))
+                .rejects.toThrow('An error has occurred while reserving products');
         });
     });
 });

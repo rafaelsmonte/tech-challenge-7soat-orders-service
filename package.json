@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "rimraf dist/ && tsc && npm run copy-build-deps",
-    "copy-build-deps": "copyfiles -u 2 src/api/swagger.json dist/src/api",
-    "swagger": "node ./src/api/swagger.ts",
+    "copy-build-deps": "copyfiles -u 2 src/app/swagger.json dist/app",
+    "swagger": "node ./src/app/swagger.ts",
     "start:dev": "ts-node-dev -r tsconfig-paths/register src/index.ts",
     "start:prod": "node dist/index.js",
     "test": "jest"

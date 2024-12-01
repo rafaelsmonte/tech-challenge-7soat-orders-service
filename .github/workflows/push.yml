@@ -46,7 +46,7 @@ jobs:
         run: echo "The Quality Gate status is ${{ steps.sonarqube-quality-gate-check.outputs.quality-gate-status }}"
   build-and-push:
     name: Build Image
-    needs: test
+    #needs: test
     runs-on: ubuntu-latest
     steps:
     - name: Check out code

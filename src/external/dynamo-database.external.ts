@@ -250,4 +250,49 @@ export class DynamoDatabase implements IDatabase {
       throw new DatabaseError('Failed to delete an order');
     }
   }
+  async deleteOrderTestQualityGate2(id: string): Promise<void> {
+    try {
+      const params = {
+        TableName: 'Orders',
+        Key: {
+          id: id,
+        },
+      };
+
+      await this.dynamoDBDocClient.send(new DeleteCommand(params));
+    } catch (error) {
+
+      throw new DatabaseError('Failed to delete an order');
+    }
+  }
+  async deleteOrderTestQualityGate3(id: string): Promise<void> {
+    try {
+      const params = {
+        TableName: 'Orders',
+        Key: {
+          id: id,
+        },
+      };
+
+      await this.dynamoDBDocClient.send(new DeleteCommand(params));
+    } catch (error) {
+
+      throw new DatabaseError('Failed to delete an order');
+    }
+  }
+  async deleteOrderTestQualityGate5(id: string): Promise<void> {
+    try {
+      const params = {
+        TableName: 'Orders',
+        Key: {
+          id: id,
+        },
+      };
+
+      await this.dynamoDBDocClient.send(new DeleteCommand(params));
+    } catch (error) {
+
+      throw new DatabaseError('Failed to delete an order');
+    }
+  }
 }

@@ -74,6 +74,7 @@ export class DynamoDatabase implements IDatabase {
                   product.quantity,
                 ),
             ),
+            order.customerId,
           ),
       );
 
@@ -118,6 +119,7 @@ export class DynamoDatabase implements IDatabase {
               product.quantity,
             ),
         ),
+        result.Item.customerId,
       );
     } catch (error) {
       console.log(`Database error: ${error}`);

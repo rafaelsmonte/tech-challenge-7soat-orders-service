@@ -83,6 +83,8 @@ export class AxiosClientHttp implements IClientHttp {
         },
       );
 
+      console.log('retorno API products: ', JSON.stringify(response));
+
       const products = response.data.map(
         (product) =>
           new Product(

@@ -40,7 +40,7 @@ export class AxiosClientHttp implements IClientHttp {
       console.log(`An error has occurred while creating payment: ${error}`);
       throw new CreatePaymentError(
         error.response.data.message ||
-          'An error has occurred while creating payment',
+        'An error has occurred while creating payment',
       );
     }
   }
@@ -79,10 +79,9 @@ export class AxiosClientHttp implements IClientHttp {
 
       return products;
     } catch (error) {
-      console.log(`An error has occurred while reserving products: ${error}`);
       throw new ReserveProductsError(
         error.response.data.message ||
-          'An error has occurred while reserving products',
+        'An error has occurred while reserving products',
       );
     }
   }

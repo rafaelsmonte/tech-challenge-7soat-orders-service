@@ -79,7 +79,6 @@ export class DynamoDatabase implements IDatabase {
 
       return orders;
     } catch (error) {
-      console.log(`Database error: ${error}`);
       throw new DatabaseError('Failed to find all orders');
     }
   }
@@ -120,7 +119,7 @@ export class DynamoDatabase implements IDatabase {
         ),
       );
     } catch (error) {
-      console.log(`Database error: ${error}`);
+      console.log(error);
       throw new DatabaseError('Failed to find an order');
     }
   }
@@ -160,7 +159,7 @@ export class DynamoDatabase implements IDatabase {
 
       return this.findOrderById(orderId);
     } catch (error) {
-      console.log(`Database error: ${error}`);
+
       throw new DatabaseError('Failed to create an order');
     }
   }
@@ -187,7 +186,7 @@ export class DynamoDatabase implements IDatabase {
 
       return this.findOrderById(order.getId());
     } catch (error) {
-      console.log(`Database error: ${error}`);
+
       throw new DatabaseError('Failed to delete order status');
     }
   }
@@ -216,7 +215,7 @@ export class DynamoDatabase implements IDatabase {
 
       return this.findOrderById(orderId);
     } catch (error) {
-      console.log(`Database error: ${error}`);
+
       throw new DatabaseError('Failed to update an order paymentId');
     }
   }
@@ -232,7 +231,7 @@ export class DynamoDatabase implements IDatabase {
 
       await this.dynamoDBDocClient.send(new DeleteCommand(params));
     } catch (error) {
-      console.log(`Database error: ${error}`);
+
       throw new DatabaseError('Failed to delete an order');
     }
   }

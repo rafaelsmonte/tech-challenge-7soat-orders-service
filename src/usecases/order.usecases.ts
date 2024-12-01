@@ -39,10 +39,6 @@ export class OrderUseCases {
     notes: string,
     customerId?: string,
   ): Promise<OrderWithPayment> {
-    console.log(
-      'antes de reservar os produtos: ',
-      JSON.stringify(productsWithQuantity),
-    );
     const products: Product[] = await productGateway.reserve(
       productsWithQuantity,
     );
@@ -97,14 +93,24 @@ export class OrderUseCases {
       ),
     );
 
+    console.log('novo pedido criado: ', JSON.stringify(newOrder));
+
     let payment: Payment;
+
+    console.log('antes de chamar a API do pagamento: ');
 
     try {
       payment = await paymentGateway.create(newOrder.getId(), totalPrice);
     } catch (error) {
+      console.log('falha criando pagamento... pedido deletado');
       await orderGateway.delete(newOrder.getId());
       throw error;
     }
+
+    console.log(
+      'depois de chamar a API do pagamento: ',
+      JSON.stringify(payment),
+    );
 
     // TODO uncomment for tests. remove this late
     // const payment = new Payment(

@@ -29,6 +29,11 @@ export class AxiosClientHttp implements IClientHttp {
   async createPayment(orderId: string, price: number): Promise<Payment> {
     const data = { orderId, price };
 
+    console.log(
+      'antes de chamar a API para criar payment: ',
+      JSON.stringify(data),
+    );
+
     try {
       const response = await this.axiosClient.post('/private/payment', data, {
         baseURL: process.env.PAYMENTS_API_BASE_URL,
@@ -37,7 +42,10 @@ export class AxiosClientHttp implements IClientHttp {
         },
       });
 
-      console.log('payment response: ', JSON.stringify(response));
+      console.log(
+        'resposta da API para criar payment: ',
+        JSON.stringify(response),
+      );
 
       const payment = new Payment(
         response.data.id,
@@ -46,6 +54,8 @@ export class AxiosClientHttp implements IClientHttp {
         response.data.pixQrCode,
         response.data.pixQrCode64,
       );
+
+      console.log('pagamento criado: ', JSON.stringify(payment));
 
       return payment;
     } catch (error) {
@@ -61,8 +71,6 @@ export class AxiosClientHttp implements IClientHttp {
   ): Promise<Product[]> {
     const data = { productsWithQuantity };
 
-    console.log('antes de chamar a API para reservar: ', JSON.stringify(data));
-
     try {
       const response = await this.axiosClient.post(
         '/private/stock/reserve',
@@ -74,8 +82,6 @@ export class AxiosClientHttp implements IClientHttp {
           },
         },
       );
-
-      console.log('resposta da API para reservar: ', JSON.stringify(response));
 
       const products = response.data.map(
         (product) =>
@@ -91,8 +97,6 @@ export class AxiosClientHttp implements IClientHttp {
             product.quantity,
           ),
       );
-
-      console.log('produtos reservados: ', JSON.stringify(products));
 
       return products;
     } catch (error) {

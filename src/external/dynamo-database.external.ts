@@ -44,7 +44,7 @@ export class DynamoDatabase implements IDatabase {
   async findAllOrders(): Promise<Order[]> {
     try {
       const params = {
-        TableName: 'Orders',
+        TableName: 'orders',
       };
 
       const result = await this.dynamoDBDocClient.send(new ScanCommand(params));
@@ -87,7 +87,7 @@ export class DynamoDatabase implements IDatabase {
   async findOrderById(id: string): Promise<Order | null> {
     try {
       const params = {
-        TableName: 'Orders',
+        TableName: 'orders',
         Key: { id },
       };
 
@@ -132,7 +132,7 @@ export class DynamoDatabase implements IDatabase {
 
     try {
       const params = {
-        TableName: 'Orders',
+        TableName: 'orders',
         Item: {
           id: orderId,
           createdAt: now,
@@ -170,7 +170,7 @@ export class DynamoDatabase implements IDatabase {
       const newStatus = order.getStatus();
 
       const params = {
-        TableName: 'Orders',
+        TableName: 'orders',
         Key: { id: order.getId() },
         UpdateExpression: 'SET #status = :newStatus, #updatedAt = :updatedAt',
         ExpressionAttributeNames: {
@@ -198,7 +198,7 @@ export class DynamoDatabase implements IDatabase {
   ): Promise<Order> {
     try {
       const params = {
-        TableName: 'Orders',
+        TableName: 'orders',
         Key: { id: orderId },
         UpdateExpression:
           'SET #paymentId = :paymentId, #updatedAt = :updatedAt',
@@ -224,7 +224,7 @@ export class DynamoDatabase implements IDatabase {
   async deleteOrder(id: string): Promise<void> {
     try {
       const params = {
-        TableName: 'Orders',
+        TableName: 'orders',
         Key: {
           id: id,
         },

@@ -37,6 +37,6 @@ create_table() {
       ReadCapacityUnits=5,WriteCapacityUnits=5
 }
 
-create_table "Orders"
+create_table "orders"
 
 echo "LocalStack setup completed!"

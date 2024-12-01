@@ -1,0 +1,188 @@
+{
+	"info": {
+		"_postman_id": "55bcfeed-89fe-43d9-8f4b-a1706c94c6c7",
+		"name": "tech-challenge-orders-service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6258676"
+	},
+	"item": [
+		{
+			"name": "Order",
+			"item": [
+				{
+					"name": "/order",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/order",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"order"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/order/:id/change-status",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": \"IN_PROGRESS\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/order/ORDER_ID/change-status",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"order",
+								"ORDER_ID",
+								"change-status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/order/:id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/order/ORDER_ID",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"order",
+								"ORDER_ID"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/order/:id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/order/ORDER_ID",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"order",
+								"ORDER_ID"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/order/",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJqZURQdGwxY1hwN2wxeFZEK3BsZ3piZzdydW42SEJWdG5MUnU5Z21ZbWhZPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJhNGY4YTQ4OC01MDcxLTcwZGQtMTBkZC03Mjk4M2RlNzUzYmQiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV8zbVhkcVRsemIiLCJjbGllbnRfaWQiOiI1amVocmM3Nm10M2toaGNkODMzZm1kdm1vayIsIm9yaWdpbl9qdGkiOiI4NjhhMmRkNi03Mjc5LTRmMDEtYTllOS0yZmI4ZjgyZjM3YzUiLCJldmVudF9pZCI6IjA4NzE0MWE2LTFiM2MtNDI0NS1hMjNiLTQwYmYxNmUyYTg3MiIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE3MzMwODc4NzAsImV4cCI6MTczMzA5MTQ3MCwiaWF0IjoxNzMzMDg3ODcwLCJqdGkiOiJlZmNhYjAzMy0wOTI2LTQ4MjMtYjU1Mi1iNGFmZDYyYTMwYTAiLCJ1c2VybmFtZSI6IjAxMjM0NTY3ODkzIn0.SvhQh7FUzRPTCJilLerDDwY7UHEjf_4nT87lu3x4FJJA22xSsIHhv0oElNoOzrxK2zcDT9SdFJJvp80pIobGeuLWQWnm1CtYPxgsFb_N6I0VNJYKCu-K1ICZ4Ue9xsHh20Hrh5XOmZdzvjlpPlez7wGYIJJiYsjXoRTRzFfphMU7Rl-qzxrFZnxM5AblopglxxaOObudNLr5iaDnCUzd1H35V4GoI3unvZGTPmL2usfTf6SxetltGWh2tK7sMVokVQNtbmJH5BGpMNJ81iSLQ6OGNq3gILPr6qEeX-5pILAXSgJaHe3R-c1z9lS8-lNaV6B72Z7cdKOyFIdQtW4goA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"notes\": \"order notes\",\n    \"productsWithQuantity\": [\n        {\n            \"productId\": 1,\n            \"quantity\": 1\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/order",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"order"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Metrics",
+			"item": [
+				{
+					"name": "/metrics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/metrics",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"metrics"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "https://evff0dxwnk.execute-api.us-east-1.amazonaws.com/apis/orders/"
+		},
+		{
+			"key": "url",
+			"value": "http://localhost:3000",
+			"type": "string",
+			"disabled": true
+		}
+	]
+}

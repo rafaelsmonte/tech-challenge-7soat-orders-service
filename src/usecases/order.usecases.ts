@@ -39,6 +39,10 @@ export class OrderUseCases {
     notes: string,
     customerId?: string,
   ): Promise<OrderWithPayment> {
+    console.log(
+      'antes de reservar os produtos: ',
+      JSON.stringify(productsWithQuantity),
+    );
     const products: Product[] = await productGateway.reserve(
       productsWithQuantity,
     );
@@ -72,6 +76,8 @@ export class OrderUseCases {
 
     // products.push(product1);
     // products.push(product2);
+
+    console.log('depois de reservar os produtos: ', JSON.stringify(products));
 
     let totalPrice = products.reduce((sum, product) => {
       return sum + product.getPrice() * product.getQuantity();

@@ -5,6 +5,9 @@ import { ReserveProductsError } from '../errors/reserve-products-error';
 import { Payment } from '../entities/payment.entity';
 import { Product } from '../entities/product.entity';
 import { ProductWithQuantity } from '../types/product-with-quantity.type';
+import { IPaymentGateway } from 'src/interfaces/payment.gateway.interface';
+import { IProductGateway } from 'src/interfaces/product.gateway.interface';
+import { IOrderGateway } from 'src/interfaces/order.gateway.interface';
 
 // Mock axios
 jest.mock('axios');
@@ -12,11 +15,28 @@ const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 describe('AxiosClientHttp', () => {
     let axiosClientHttp: AxiosClientHttp;
+    let orderGateway: jest.Mocked<IOrderGateway>;
+    let productGateway: jest.Mocked<IProductGateway>;
+    let paymentGateway: jest.Mocked<IPaymentGateway>;
 
     beforeEach(() => {
         // Reset mocks before each test
         mockedAxios.create.mockReturnValue(mockedAxios);
         axiosClientHttp = new AxiosClientHttp();
+        orderGateway = {
+            findAll: jest.fn(),
+            findById: jest.fn(),
+            create: jest.fn(),
+            updateStatus: jest.fn(),
+            updatePaymentId: jest.fn(),
+            delete: jest.fn(),
+        };
+        productGateway = {
+            reserve: jest.fn(),
+        };
+        paymentGateway = {
+            create: jest.fn(),
+        };
     });
 
     describe('createPayment', () => {

@@ -14,25 +14,10 @@ export class AxiosClientHttp implements IClientHttp {
       timeout: 10000,
       headers: { 'Content-Type': 'application/json' },
     });
-
-    this.axiosClient.interceptors.request.use((request) => {
-      console.log('Starting Request', JSON.stringify(request, null, 2));
-      return request;
-    });
-
-    this.axiosClient.interceptors.response.use((response) => {
-      console.log('Response:', JSON.stringify(response, null, 2));
-      return response;
-    });
   }
 
   async createPayment(orderId: string, price: number): Promise<Payment> {
     const data = { orderId, price };
-
-    console.log(
-      'antes de chamar a API para criar payment: ',
-      JSON.stringify(data),
-    );
 
     try {
       const response = await this.axiosClient.post('/private/payment', data, {
@@ -42,20 +27,13 @@ export class AxiosClientHttp implements IClientHttp {
         },
       });
 
-      console.log(
-        'resposta da API para criar payment: ',
-        JSON.stringify(response),
-      );
-
       const payment = new Payment(
         response.data.id,
         response.data.orderId,
         response.data.price,
         response.data.pixQrCode,
-        response.data.pixQrCode64,
+        response.data.pixQrCodeBase64,
       );
-
-      console.log('pagamento criado: ', JSON.stringify(payment));
 
       return payment;
     } catch (error) {
@@ -83,8 +61,6 @@ export class AxiosClientHttp implements IClientHttp {
         },
       );
 
-      console.log('retorno API products: ', JSON.stringify(response));
-
       const products = response.data.map(
         (product) =>
           new Product(
@@ -103,7 +79,7 @@ export class AxiosClientHttp implements IClientHttp {
       return products;
     } catch (error) {
       throw new ReserveProductsError(
-        error.response.data.message ||
+        error.response.data?.message ||
           'An error has occurred while reserving products',
       );
     }

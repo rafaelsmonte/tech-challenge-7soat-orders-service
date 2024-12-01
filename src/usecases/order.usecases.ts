@@ -73,8 +73,6 @@ export class OrderUseCases {
     // products.push(product1);
     // products.push(product2);
 
-    console.log('depois de reservar os produtos: ', JSON.stringify(products));
-
     let totalPrice = products.reduce((sum, product) => {
       return sum + product.getPrice() * product.getQuantity();
     }, 0);
@@ -93,24 +91,14 @@ export class OrderUseCases {
       ),
     );
 
-    console.log('novo pedido criado: ', JSON.stringify(newOrder));
-
     let payment: Payment;
-
-    console.log('antes de chamar a API do pagamento: ');
 
     try {
       payment = await paymentGateway.create(newOrder.getId(), totalPrice);
     } catch (error) {
-      console.log('falha criando pagamento... pedido deletado');
       await orderGateway.delete(newOrder.getId());
       throw error;
     }
-
-    console.log(
-      'depois de chamar a API do pagamento: ',
-      JSON.stringify(payment),
-    );
 
     // TODO uncomment for tests. remove this late
     // const payment = new Payment(

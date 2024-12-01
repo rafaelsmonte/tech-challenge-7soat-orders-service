@@ -127,7 +127,6 @@ export class DynamoDatabase implements IDatabase {
 
   async createOrder(order: Order): Promise<Order> {
     const orderId = uuidv4();
-    const productId = uuidv4();
     const now = new Date().toISOString();
 
     try {
@@ -142,8 +141,9 @@ export class DynamoDatabase implements IDatabase {
           totalPrice: order.getTotalPrice(),
           status: order.getStatus(),
           paymentId: order.getPaymentId(),
+          customerId: order.getCustomerId(),
           products: order.getProducts().map((product) => ({
-            id: productId,
+            id: product.getId(),
             createdAt: now,
             updatedAt: now,
             name: product.getName(),

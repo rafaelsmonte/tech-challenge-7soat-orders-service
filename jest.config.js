@@ -13,19 +13,19 @@ module.exports = {
   //   }
   // },
   collectCoverage: true,
-  // coveragePathIgnorePatterns: [
-  //   "/node_modules/",
-  //   "/.*\\.spec\\.js$/",
-  //   "/.*\\.spec\\.js$/",
-  //   '\\.error\\.ts$',
-  //   '\\index\\.ts$',
-  //   '/.*\\swagger\\.ts$',
-  //   '<rootDir>/src/app/*',
-  // ],
+  coveragePathIgnorePatterns: [
+    "/node_modules/",
+    "/.*\\.spec\\.js$/",
+    "/.*\\.spec\\.js$/",
+    '\\.error\\.ts$',
+    '\\index\\.ts$',
+    '/.*\\swagger\\.ts$',
+    '<rootDir>/src/app/*',
+  ],
   coverageDirectory: "coverage",
   coverageReporters: ["lcov", "text"],
-  // collectCoverageFrom: [
-  //   'src/**/*.{ts,tsx}',
-  //   '!src/**/*.d.ts',
-  // ],
+  collectCoverageFrom: [
+    'src/**/*.{ts,tsx}',
+    '!src/**/*.d.ts',
+  ],
 };

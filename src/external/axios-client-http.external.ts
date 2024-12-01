@@ -14,6 +14,16 @@ export class AxiosClientHttp implements IClientHttp {
       timeout: 10000,
       headers: { 'Content-Type': 'application/json' },
     });
+
+    this.axiosClient.interceptors.request.use((request) => {
+      console.log('Starting Request', JSON.stringify(request, null, 2));
+      return request;
+    });
+
+    this.axiosClient.interceptors.response.use((response) => {
+      console.log('Response:', JSON.stringify(response, null, 2));
+      return response;
+    });
   }
 
   async createPayment(orderId: string, price: number): Promise<Payment> {

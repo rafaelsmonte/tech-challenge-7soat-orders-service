@@ -95,7 +95,7 @@ export class AxiosClientHttp implements IClientHttp {
             product.price,
             product.description,
             product.pictures,
-            product.categoryType,
+            product.category.type,
             product.quantity,
           ),
       );

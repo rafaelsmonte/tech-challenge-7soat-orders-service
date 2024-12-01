@@ -37,7 +37,6 @@ export class AxiosClientHttp implements IClientHttp {
 
       return payment;
     } catch (error) {
-      console.log(`An error has occurred while creating payment: ${error}`);
       throw new CreatePaymentError(
         error.response.data.message ||
         'An error has occurred while creating payment',

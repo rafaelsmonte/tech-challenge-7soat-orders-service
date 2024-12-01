@@ -119,7 +119,6 @@ export class DynamoDatabase implements IDatabase {
         ),
       );
     } catch (error) {
-      console.log(error);
       throw new DatabaseError('Failed to find an order');
     }
   }

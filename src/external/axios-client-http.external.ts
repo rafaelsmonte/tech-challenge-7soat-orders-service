@@ -78,8 +78,6 @@ export class AxiosClientHttp implements IClientHttp {
 
       return products;
     } catch (error) {
-      console.log(error, "<<<<<<<")
-
       throw new ReserveProductsError(
         error.response.data?.message ||
         'An error has occurred while reserving products',

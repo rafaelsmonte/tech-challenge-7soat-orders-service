@@ -78,4 +78,18 @@ export class OrderController {
       success,
     );
   }
+  //method for testing sonnarqube coverage, should not be merged on main
+  static async updateStatusOnPaymentReceived_testing_coverage(
+    database: IDatabase,
+    orderId: string,
+    success: boolean,
+  ): Promise<void> {
+    const orderGateway = new OrderGateway(database);
+
+    await OrderUseCases.updateStatusOnPaymentReceived(
+      orderGateway,
+      orderId,
+      success,
+    );
+  }
 }

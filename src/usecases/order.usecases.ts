@@ -43,36 +43,6 @@ export class OrderUseCases {
       productsWithQuantity,
     );
 
-    // TODO uncomment for tests. remove this later
-    // const product1 = new Product(
-    //   1,
-    //   new Date(),
-    //   new Date(),
-    //   'product 1 name',
-    //   10.0,
-    //   'description',
-    //   [],
-    //   CategoryType.MEAL,
-    //   2,
-    // );
-
-    // const product2 = new Product(
-    //   2,
-    //   new Date(),
-    //   new Date(),
-    //   'product 2 name',
-    //   20.0,
-    //   'description',
-    //   [],
-    //   CategoryType.MEAL,
-    //   3,
-    // );
-
-    // const products: Product[] = [];
-
-    // products.push(product1);
-    // products.push(product2);
-
     let totalPrice = products.reduce((sum, product) => {
       return sum + product.getPrice() * product.getQuantity();
     }, 0);
@@ -99,15 +69,6 @@ export class OrderUseCases {
       await orderGateway.delete(newOrder.getId());
       throw error;
     }
-
-    // TODO uncomment for tests. remove this late
-    // const payment = new Payment(
-    //   0,
-    //   newOrder.getId(),
-    //   newOrder.getTotalPrice(),
-    //   'pixQrCode',
-    //   'pixQrCode64',
-    // );
 
     const updateOrder = await orderGateway.updatePaymentId(
       newOrder.getId(),

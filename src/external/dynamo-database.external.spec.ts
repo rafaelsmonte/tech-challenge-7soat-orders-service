@@ -2,6 +2,8 @@ import { mockClient } from 'aws-sdk-client-mock';
 import { DeleteCommand, DynamoDBDocumentClient, GetCommand, PutCommand, ScanCommand, UpdateCommand } from '@aws-sdk/lib-dynamodb';
 import { DynamoDatabase } from './dynamo-database.external';
 import { DatabaseError } from '../errors/database.error';
+import { Order } from 'src/entities/order.entity';
+import { Product } from 'src/entities/product.entity';
 
 describe('DynamoDatabase', () => {
     const dynamoMock = mockClient(DynamoDBDocumentClient);
@@ -106,6 +108,7 @@ describe('DynamoDatabase', () => {
     });
     describe('createOrder', () => {
         it('should create a new order and return it', async () => {
+            //Giver the following order
             const order = {
                 getNotes: () => 'Order Notes',
                 getTrackingId: () => 'TRACK123',
@@ -154,13 +157,17 @@ describe('DynamoDatabase', () => {
                     ],
                 },
             });
-
+            //When I create an Order
             const createdOrder = await database.createOrder(order as any);
 
+            //Then the result should be not null
             expect(createdOrder).not.toBeNull();
+            //And the result's ID should be 'new-order-id'
             expect(createdOrder.getId()).toBe('new-order-id');
+            //And the result's Notes should be 'Order Notes'
             expect(createdOrder.getNotes()).toBe('Order Notes');
         });
+
 
         it('should throw a DatabaseError on failure', async () => {
             dynamoMock.on(PutCommand).rejects(new Error('DynamoDB error'));

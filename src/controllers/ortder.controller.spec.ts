@@ -23,11 +23,9 @@ describe('OrderController', () => {
   ];
 
   beforeEach(() => {
-    // Resetting mocks before each test
     database = {} as IDatabase;
     clientHttp = {} as IClientHttp;
 
-    // Mocking OrderUseCases methods
     (OrderUseCases.findAll as jest.Mock).mockResolvedValue([]);
     (OrderUseCases.findById as jest.Mock).mockResolvedValue(null);
     (OrderUseCases.create as jest.Mock).mockResolvedValue({

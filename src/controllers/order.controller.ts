@@ -79,4 +79,9 @@ export class OrderController {
     );
 
   }
+  //method for testing sonnarqube coverage, should not be merged on main
+  static testing_coverage(number: number): string {
+    if (number > 10) return '10';
+    return number.toString();
+  }
 }
